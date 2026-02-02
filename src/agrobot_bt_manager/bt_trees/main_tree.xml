@@ -1,0 +1,62 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="OpenDoorNavSubtree">
+    <Fallback name="opendoor">
+      <Sequence name="doorsequence">
+        <CheckIfNeedOpenDoor nav_target_room="{sub_target_room}" door_y="-4.9" target_door="{target_door}" />
+        <MoveBaseToRoom nav_target_room="{target_door}" />
+        <OpenDoorAction />
+        <MoveBaseToRoom nav_target_room="{sub_target_room}" />
+        <ClearGlobalCostmapNode nav_target_room="{sub_target_room}"/>
+      </Sequence>
+
+      <Sequence name="direct_nav_sequence">
+        <MoveBaseToRoom nav_target_room="{sub_target_room}" />
+        <ClearGlobalCostmapNode nav_target_room="{sub_target_room}"/>
+      </Sequence>
+    </Fallback>
+  </BehaviorTree>
+
+
+  <!-- main tree -->
+  <BehaviorTree ID="MainTree">
+    <ReactiveFallback name="Mainfallback">
+      <!-- 持续监听语音新命 000令 输出：房间名/任务-->
+        <WaitForNewCommandCondition nav_target_room="{nav_target_room}" voice_task_command="{voice_task_command}" />
+        <Sequence ID="nav">
+          <SubTree ID="OpenDoorNavSubtree" sub_target_room="nav_target_room"/>
+
+          <Fallback ID="task_handler">
+            <!-- Nav -->
+            <Sequence>
+              <IsCommand voice_task_command="{voice_task_command}" task_type="Nav"/>
+              <Fallback ID="WAIT">
+                <Timeout msec="180000">
+                  <WaitAtTargetPose/>
+                </Timeout>
+                <Sequence>
+                  <SetBlackboard output_key="voice_task_command" value="Park"/>
+                  <SetBlackboard output_key="nav_target_room" value="park_room"/>
+                  <SubTree ID="OpenDoorNavSubtree" sub_target_room="nav_target_room"/>
+                </Sequence>
+              </Fallback>
+            </Sequence>
+
+            <!-- Charge -->
+            <Sequence>
+              <IsCommand voice_task_command="{voice_task_command}" task_type="Charge"/>
+              <LocateChargingStation/>
+              <DockToChargingStation/>
+              <Sequence>
+                <SetBlackboard output_key="voice_task_command" value="Park"/>
+                <SetBlackboard output_key="nav_target_room" value="park_room"/>
+                <SubTree ID="OpenDoorNavSubtree" sub_target_room="nav_target_room"/>
+              </Sequence>
+            </Sequence>
+
+
+          </Fallback>
+
+        </Sequence>
+    </ReactiveFallback>
+  </BehaviorTree>
+</root>

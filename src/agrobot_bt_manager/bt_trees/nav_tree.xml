@@ -1,0 +1,85 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="OpenDoorNavSubtree">
+    <Fallback name="opendoor">
+      <Sequence name="opendoorsequence">
+        <CheckIfNeedOpenDoor nav_target_room="{sub_target_room}" door_y="-4.9" target_door="{target_door}" />
+        <MoveBaseToRoom nav_target_room="{target_door}" />
+        <OpenDoorAction />
+        <MoveBaseToRoom nav_target_room="{sub_target_room}" />
+        <ClearGlobalCostmapNode nav_target_room="{sub_target_room}"/>
+      </Sequence>
+
+      <Sequence name="direct_nav_sequence">
+        <MoveBaseToRoom nav_target_room="{sub_target_room}" />
+        <ClearGlobalCostmapNode nav_target_room="{sub_target_room}"/>
+      </Sequence>
+    </Fallback>
+  </BehaviorTree>
+
+
+  <!-- main tree -->
+  <BehaviorTree ID="MainTree">
+    <ReactiveFallback name="Mainfallback">
+      <!-- 持续监听语音新命令 输出：房间名/任务-->
+        <WaitForNewCommandCondition nav_target_room="{nav_target_room}" voice_task_command="{voice_task_command}" task_locked="{task_locked}"/>
+        
+        <Fallback name="task_handler">
+          <!-- Nav -->
+          <Sequence name="nav_sequence">
+            <IsCommand voice_task_command="{voice_task_command}" task_type="Nav"/>
+            <SubTree ID="OpenDoorNavSubtree" sub_target_room="nav_target_room"/>
+            <Fallback ID="WAIT">
+              <Timeout msec="18000">
+                <WaitAtTargetPose/>
+              </Timeout>
+              <Sequence>
+                <SetBlackboard output_key="voice_task_command" value="Park"/>
+                <SetBlackboard output_key="nav_target_room" value="park_room"/>
+              </Sequence>
+            </Fallback>
+          </Sequence>
+
+          <!-- Charge -->
+          <Sequence name="charge_sequence">
+            <IsCommand voice_task_command="{voice_task_command}" task_type="Charge"/>
+            <SubTree ID="OpenDoorNavSubtree" sub_target_room="nav_target_room"/>
+            <SetBlackboard output_key="task_locked" value="true"/>
+            <Fallback ID="Charge">
+              <IsChargingCondition IsCharging="{IsCharging}"/>
+              <Sequence>
+                <LocateChargingStation/>
+                <DockToChargingStation IsCharging="{IsCharging}"/>
+              </Sequence>
+            </Fallback>
+            <ClearTaskCommand voice_task_command="{voice_task_command}" nav_target_room="{nav_target_room}" />
+          </Sequence>
+
+          <!-- stopcharge -->
+          <Sequence name="stopcharge_sequnence">
+            <IsCommand voice_task_command="{voice_task_command}" task_type="Stopcharge"/>
+            <Fallback>
+              <Inverter>
+                <IsChargingCondition IsCharging="{IsCharging}"/>
+              </Inverter>
+              <StopChargingAction IsCharging="{IsCharging}"/>
+            </Fallback>
+            <SetBlackboard output_key="task_locked" value="false"/>
+            <ClearTaskCommand voice_task_command="{voice_task_command}" nav_target_room="{nav_target_room}" />
+          </Sequence>
+
+          <!-- park -->
+          <Sequence name="park_sequence">
+            <IsCommand voice_task_command="{voice_task_command}" task_type="Park"/>
+            <SubTree ID="OpenDoorNavSubtree" sub_target_room="nav_target_room"/>
+            <ClearTaskCommand voice_task_command="{voice_task_command}" nav_target_room="{nav_target_room}" />
+          </Sequence>
+
+          <!-- others -->
+
+
+        </Fallback>
+
+       
+    </ReactiveFallback>
+  </BehaviorTree>
+</root>

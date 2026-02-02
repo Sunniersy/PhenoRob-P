@@ -1,0 +1,13 @@
+<launch>
+    <!-- 启动激光雷达数据滤波节点 -->
+    <node pkg="RobotCar" type="laser_filter" name="laser_filter_node" output="screen">
+        <!-- 参数设置 -->
+        <!-- 原始激光雷达数据话题 -->
+        <param name="source_topic" value="/scan" />
+        <!-- 滤波后数据的发布话题 -->
+        <param name="pub_topic" value="/scan_filtered" />
+        <!-- 离群点判断阈值 -->
+        <param name="outlier_threshold" value="0.03" />     
+        <!-- 当滤除效果比较差 还存在  减小   当滤除效果太好 损失了细节 增大   find  平衡点  -->
+    </node>
+</launch> 

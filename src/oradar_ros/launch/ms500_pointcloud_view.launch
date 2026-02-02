@@ -1,0 +1,21 @@
+<launch>
+  <node pkg="oradar_ros" type="oradar_pointcloud" name="oradar_pointcloud" output="screen">
+
+    <param name="device_model" value="MS500"/>
+    <param name="frame_id"     type="string"   value="pc_frame"/>       <!--Configure Lidar coordinate system name-->
+    <param name="cloud_topic"  type="string"   value="point_cloud" />   <!--Configure pointCloud topic name--> 
+    <param name="angle_min"    type="double"   value="-135.0" /> 	      <!--Configure minimum angle, unit degree, value range [-135, 135].Default value is "-135"-->
+    <param name="angle_max"    type="double"   value="135.0"/>   	      <!--Configure maximum angle, unit degree, value range [-135, 135].Default value is "135"-->
+    <param name="range_min"    type="double"   value="0.05" />    	    <!--Configure minimum distance-->
+    <param name="range_max"    type="double"   value="30.0" />    	    <!--Configure maximum distance-->
+    <param name="inverted"     type="bool"     value="false"/>    	    <!--Configure the direction of the point cloud.True is clockwise, and false is counterclockwise.-->
+    <param name="motor_speed"  type="int"      value="15" />      	    <!--Configure Lidar speed.value range: 5,10,15,20,25,30. Default value is "15Hz"-->
+    <param name="lidar_ip"     type="string"   value="192.168.1.100" /> <!--Configure Lidar ip address.Default is  "192.168.1.100"-->
+    <param name="lidar_port"   type="int"      value="2007" />          <!--Configure Lidar net port number.Default is "2007"-->
+    <param name="filter_size"  type="int"      value="1"   />           <!--Configure Lidar filter level, value range: 0,1,2,3,4,5.Default is "1"-->
+    <param name="motor_dir"    type="int"      value="0"   />           <!--set Lidar motor rotation direction, value range: 0(anticlockwise),1(clockwise).Default is "0"-->
+
+  </node>
+
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find oradar_ros)/rviz/oradar_pointcloud.rviz" />
+</launch>

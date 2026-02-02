@@ -1,0 +1,6 @@
+bool charge_enable      # 设置充电使能
+bool charge_stop       # 设置充电停止
+---
+bool current_enable    # 当前充电使能状态
+bool current_stop      # 当前充电停止状态
+bool current_charging  # 当前是否正在充电

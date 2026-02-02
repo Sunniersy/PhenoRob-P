@@ -1,0 +1,6 @@
+# In move_base_params.yaml or a new global_planner_params.yaml
+GlobalPlanner:
+  allow_unknown: false
+  use_dijkstra: false  # To use A*
+  default_tolerance: 0.04
+# ... other GlobalPlanner specific parameters
