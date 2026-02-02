@@ -1,0 +1,7 @@
+# ROS/Catkin build artifacts
+build/
+devel/
+.catkin_workspace
+
+# VSCode
+.vscode/
