@@ -1,0 +1,3 @@
+string room_name
+string task_command
+bool new_voice_command

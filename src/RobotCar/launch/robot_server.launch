@@ -1,0 +1,6 @@
+<launch>
+    <node pkg = "RobotCar" type ="roompose_recorder" name ="roompose_recorder" output = "screen"> 
+        <param name = "csv_file_path" value = "/home/agrobot2/Bt_robot_ws/src/agrobot_bt_manager/configs/rooms_pose.csv"/>
+    </node>
+    <node pkg = "RobotCar" type ="Tcp_Qt" name ="Tcp_Qt" output ="screen"/>
+</launch>

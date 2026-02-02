@@ -1,0 +1,23 @@
+<launch>
+    <arg name="csv_file_path" default="$(find agrobot_bt_manager)/configs/test_rooms_pose.csv"/>
+    
+    <!-- 加载 CSV 数据 -->
+    <node pkg="agrobot_bt_manager" type="load_roompose" name="load_roompose" output="screen">
+        <param name="csv_file_path" value="$(arg csv_file_path)"/>
+    </node>
+
+    <!-- 启动语音指令处理 -->
+    <node pkg="agrobot_bt_manager" type="voice_command_handler" name="voice_command_handler" output="screen" />
+
+    <!-- 启动房间坐标记录服务 -->
+    <node pkg="RobotCar" type="roompose_recorder" name="roompose_recorder" output="screen">
+        <param name="csv_file_path" value="$(arg csv_file_path)" />
+    </node>
+
+    <!-- 启动 TCP 通信 -->
+    <node pkg="RobotCar" type="Tcp_Qt" name="Tcp_Qt" output="screen" >
+        <param name="csv_file_path" value="$(arg csv_file_path)" />
+    </node>
+    <!-- 启动充电对接相关的 ICP 匹配 -->
+    <include file="$(find pattern_matcher)/launch/icp_charge.launch"/>
+</launch>

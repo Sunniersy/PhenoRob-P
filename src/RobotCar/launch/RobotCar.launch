@@ -1,0 +1,7 @@
+<launch>
+    <include file="$(find oradar_ros)/launch/ms500_scan.launch" />
+    <include file="$(find RobotCar)/launch/laser_filter.launch" />
+    <include file="$(find RobotCar)/launch/serial_communication_pub.launch" /> 
+    <include file="$(find RobotCar)/launch/urdf.launch" /> 
+    <include file="$(find RobotCar)/launch/nav06_test.launch" /> 
+</launch>
