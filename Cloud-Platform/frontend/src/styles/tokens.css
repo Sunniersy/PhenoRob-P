@@ -1,0 +1,325 @@
+/* ============================================================
+   Design Tokens - PhenoBot Cloud
+   参考 Apple / Linear 设计语言
+   ============================================================ */
+
+:root {
+  /* === 背景色 === */
+  --bg-canvas: #f5f5f7;
+  --bg-canvas-secondary: #eef1f4;
+  --bg-canvas-elevated: #fbfbfd;
+  --bg-surface: rgba(255, 255, 255, 0.9);
+  --bg-surface-strong: rgba(255, 255, 255, 0.98);
+  --bg-surface-solid: #ffffff;
+  --bg-surface-muted: #f8fafc;
+  --bg-surface-accent: #eef8f5;
+  --bg-surface-accent-strong: #e2f2ed;
+  --bg-sidebar: rgba(23, 23, 23, 0.98);
+  --bg-sidebar-soft: rgba(255, 255, 255, 0.06);
+  --bg-sidebar-strong: rgba(255, 255, 255, 0.1);
+  --bg-accent-soft: rgba(16, 163, 127, 0.12);
+  --bg-success-soft: rgba(13, 148, 96, 0.12);
+  --bg-warn-soft: rgba(217, 119, 6, 0.14);
+  --bg-danger-soft: rgba(220, 38, 38, 0.12);
+
+  /* === 中性色灰阶系统 === */
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  --gray-950: #020617;
+
+  /* === 文字色 === */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-quiet: #94a3b8;
+  --text-inverse: #f8fafc;
+  --text-inverse-secondary: rgba(248, 250, 252, 0.7);
+
+  /* === 边框色 === */
+  --border-soft: rgba(15, 23, 42, 0.08);
+  --border-medium: rgba(15, 23, 42, 0.12);
+  --border-strong: rgba(15, 23, 42, 0.16);
+  --border-inverse: rgba(255, 255, 255, 0.08);
+  --border-inverse-strong: rgba(255, 255, 255, 0.14);
+
+  /* === 品牌色 === */
+  --brand: #10a37f;
+  --brand-hover: #0e8f70;
+  --brand-active: #0b735a;
+  --brand-soft: rgba(16, 163, 127, 0.12);
+  --brand-soft-strong: rgba(16, 163, 127, 0.2);
+  --brand-subtle: rgba(16, 163, 127, 0.08);
+  --brand-muted: rgba(16, 163, 127, 0.12);
+  --brand-emphasis: rgba(16, 163, 127, 0.20);
+
+  /* === 语义色 - 成功 === */
+  --success-50: #f0fdf4;
+  --success-100: #dcfce7;
+  --success-200: #bbf7d0;
+  --success-500: #22c55e;
+  --success-600: #16a34a;
+  --success-700: #15803d;
+  --success: #0d9460;
+
+  /* === 语义色 - 警告 === */
+  --warning-50: #fffbeb;
+  --warning-100: #fef3c7;
+  --warning-200: #fde68a;
+  --warning-500: #f59e0b;
+  --warning-600: #d97706;
+  --warning-700: #b45309;
+  --warn: #b45309;
+
+  /* === 语义色 - 危险 === */
+  --danger-50: #fef2f2;
+  --danger-100: #fee2e2;
+  --danger-200: #fecaca;
+  --danger-500: #ef4444;
+  --danger-600: #dc2626;
+  --danger-700: #b91c1c;
+  --danger: #dc2626;
+
+  /* === 语义色 - 信息 === */
+  --info-50: #eff6ff;
+  --info-100: #dbeafe;
+  --info-200: #bfdbfe;
+  --info-500: #3b82f6;
+  --info-600: #2563eb;
+  --info-700: #1d4ed8;
+  --accent: #2563eb;
+  --info: #2563eb;
+
+  /* === 阴影系统 === */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 12px 32px -26px rgba(15, 23, 42, 0.24), 0 1px 3px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 18px 44px -30px rgba(15, 23, 42, 0.24), 0 8px 20px rgba(15, 23, 42, 0.05);
+  --shadow-lg: 0 28px 64px -36px rgba(15, 23, 42, 0.28), 0 14px 28px rgba(15, 23, 42, 0.06);
+  --shadow-focus: 0 0 0 4px rgba(16, 163, 127, 0.16);
+
+  /* === 圆角系统 === */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-pill: 999px;
+
+  /* === 间距系统 === */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 56px;
+  --space-11: 64px;
+  --space-12: 80px;
+  --space-13: 96px;
+
+  /* === 语义间距 === */
+  --gap-xs: var(--space-1);
+  --gap-sm: var(--space-2);
+  --gap-md: var(--space-3);
+  --gap-base: var(--space-4);
+  --gap-lg: var(--space-6);
+  --gap-xl: var(--space-7);
+  --gap-2xl: var(--space-8);
+
+  /* === 字体系统 === */
+  --font-display: "Inter", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Inter", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", "IBM Plex Mono", ui-monospace, monospace;
+
+  /* === 字号系统 (4px baseline grid) === */
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 15px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 28px;
+  --text-4xl: 36px;
+  --text-5xl: 40px;
+  --text-6xl: 48px;
+
+  /* === 字重系统 === */
+  --font-normal: 400;
+  --font-medium: 520;
+  --font-semibold: 630;
+  --font-bold: 700;
+
+  /* === 行高系统 === */
+  --leading-tight: 1.15;
+  --leading-snug: 1.30;
+  --leading-normal: 1.50;
+  --leading-relaxed: 1.65;
+
+  /* === 字间距系统 === */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+
+  /* === 过渡动画系统 === */
+  --transition-fast: 160ms ease;
+  --transition-base: 220ms ease;
+  --transition-spring: 340ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* === 动画时长语义变量 === */
+  --duration-instant: 100ms;
+  --duration-fast: 160ms;
+  --duration-base: 220ms;
+  --duration-slow: 340ms;
+  --duration-slower: 500ms;
+
+  /* === 缓动函数规范 === */
+  --ease-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* === 布局常量 === */
+  --max-content: 1460px;
+  --header-height: 92px;
+  --sidebar-width: 288px;
+  --sidebar-compact-width: 96px;
+}
+
+/* ============================================================
+   暗色主题 - 参考 Linear 设计语言
+   ============================================================ */
+
+[data-theme="dark"] {
+  /* === 背景色 === */
+  --bg-canvas: #0a0a0b;
+  --bg-canvas-secondary: #111113;
+  --bg-canvas-elevated: #141416;
+  --bg-surface: rgba(20, 20, 22, 0.9);
+  --bg-surface-strong: rgba(26, 26, 30, 0.98);
+  --bg-surface-solid: #141416;
+  --bg-surface-muted: #111113;
+  --bg-surface-accent: rgba(16, 163, 127, 0.08);
+  --bg-surface-accent-strong: rgba(16, 163, 127, 0.12);
+  --bg-sidebar: rgba(10, 10, 11, 0.98);
+  --bg-sidebar-soft: rgba(255, 255, 255, 0.04);
+  --bg-sidebar-strong: rgba(255, 255, 255, 0.08);
+  --bg-accent-soft: rgba(16, 163, 127, 0.08);
+  --bg-success-soft: rgba(34, 197, 94, 0.08);
+  --bg-warn-soft: rgba(245, 158, 11, 0.08);
+  --bg-danger-soft: rgba(239, 68, 68, 0.08);
+
+  /* === 中性色灰阶系统 (暗色主题) === */
+  --gray-50: #18181b;
+  --gray-100: #1f1f23;
+  --gray-200: #27272a;
+  --gray-300: #3f3f46;
+  --gray-400: #52525b;
+  --gray-500: #71717a;
+  --gray-600: #a1a1aa;
+  --gray-700: #d4d4d8;
+  --gray-800: #e4e4e7;
+  --gray-900: #f4f4f5;
+  --gray-950: #fafafa;
+
+  /* === 文字色 === */
+  --text-primary: #f0f0f0;
+  --text-secondary: #a0a0a8;
+  --text-tertiary: #707078;
+  --text-quiet: #505058;
+  --text-inverse: #0f172a;
+  --text-inverse-secondary: rgba(15, 23, 42, 0.7);
+
+  /* === 边框色 === */
+  --border-soft: rgba(255, 255, 255, 0.06);
+  --border-medium: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --border-inverse: rgba(0, 0, 0, 0.08);
+  --border-inverse-strong: rgba(0, 0, 0, 0.14);
+
+  /* === 品牌色 (暗色主题微调) === */
+  --brand: #34d399;
+  --brand-hover: #6ee7b7;
+  --brand-active: #a7f3d0;
+  --brand-soft: rgba(52, 211, 153, 0.12);
+  --brand-soft-strong: rgba(52, 211, 153, 0.2);
+  --brand-subtle: rgba(52, 211, 153, 0.06);
+  --brand-muted: rgba(52, 211, 153, 0.10);
+  --brand-emphasis: rgba(52, 211, 153, 0.18);
+
+  /* === 语义色 (暗色主题) === */
+  --success-50: rgba(34, 197, 94, 0.06);
+  --success-100: rgba(34, 197, 94, 0.10);
+  --success-200: rgba(34, 197, 94, 0.15);
+  --success-500: #4ade80;
+  --success-600: #22c55e;
+  --success-700: #16a34a;
+  --success: #4ade80;
+
+  --warning-50: rgba(245, 158, 11, 0.06);
+  --warning-100: rgba(245, 158, 11, 0.10);
+  --warning-200: rgba(245, 158, 11, 0.15);
+  --warning-500: #fbbf24;
+  --warning-600: #f59e0b;
+  --warning-700: #d97706;
+  --warn: #fbbf24;
+
+  --danger-50: rgba(239, 68, 68, 0.06);
+  --danger-100: rgba(239, 68, 68, 0.10);
+  --danger-200: rgba(239, 68, 68, 0.15);
+  --danger-500: #f87171;
+  --danger-600: #ef4444;
+  --danger-700: #dc2626;
+  --danger: #f87171;
+
+  --info-50: rgba(59, 130, 246, 0.06);
+  --info-100: rgba(59, 130, 246, 0.10);
+  --info-200: rgba(59, 130, 246, 0.15);
+  --info-500: #60a5fa;
+  --info-600: #3b82f6;
+  --info-700: #2563eb;
+  --accent: #60a5fa;
+  --info: #60a5fa;
+
+  /* === 阴影系统 (暗色主题) === */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 12px 32px -26px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 18px 44px -30px rgba(0, 0, 0, 0.6), 0 8px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 28px 64px -36px rgba(0, 0, 0, 0.7), 0 14px 28px rgba(0, 0, 0, 0.5);
+  --shadow-focus: 0 0 0 4px rgba(52, 211, 153, 0.2);
+}
+
+/* ============================================================
+   响应式断点 (CSS变量仅供文档参考，实际使用需配合媒体查询)
+   ============================================================ */
+/*
+  --bp-sm:  640px;   // 大手机横屏
+  --bp-md:  768px;   // 平板竖屏
+  --bp-lg:  1024px;  // 平板横屏/小笔记本
+  --bp-xl:  1280px;  // 笔记本
+  --bp-2xl: 1536px;  // 大屏
+*/
+
+/* ============================================================
+   动画使用规范 (文档参考)
+   ============================================================ */
+/*
+  颜色/背景变化 → ease, 160ms
+  位移/transform → spring, 220ms
+  模态弹出 → spring, 340ms
+  页面路由 → ease-out, 220ms
+  Toast/通知 → spring, 340ms
+  骨架屏 shimmer → linear, 1.6s, infinite
+*/

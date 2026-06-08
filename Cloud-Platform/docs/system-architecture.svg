@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="980" viewBox="0 0 1440 980" role="img" aria-labelledby="title desc">
+  <title id="title">Robot Cloud System system architecture</title>
+  <desc id="desc">Architecture diagram for the Robot Cloud System showing browser, nginx, frontend, backend services, worker, infrastructure, MQTT broker, robot simulator, and data flow.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2d4b4f"/>
+    </marker>
+    <marker id="arrowSoft" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7a80"/>
+    </marker>
+    <style>
+      .page { fill: #f7f8f3; }
+      .title { font: 700 34px "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif; fill: #16302f; }
+      .subtitle { font: 400 16px "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif; fill: #52666a; }
+      .group-title { font: 700 18px "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif; fill: #204447; }
+      .box-title { font: 700 16px "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif; fill: #172f31; }
+      .box-note { font: 400 13px "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif; fill: #52666a; }
+      .label { font: 600 13px "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif; fill: #314b50; }
+      .small { font: 400 12px "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif; fill: #52666a; }
+      .group { fill: #ffffff; stroke: #d9dfd7; stroke-width: 2; rx: 14; }
+      .node { stroke-width: 2; rx: 12; }
+      .user { fill: #fff9e8; stroke: #d5a629; }
+      .edge { fill: #edf7f1; stroke: #56a37b; }
+      .app { fill: #eef4ff; stroke: #5784d4; }
+      .service { fill: #f3f0ff; stroke: #8067c7; }
+      .infra { fill: #eef7f8; stroke: #5e9aa2; }
+      .robot { fill: #fff2ee; stroke: #d16f50; }
+      .external { fill: #f7f7f7; stroke: #929aa0; }
+      .line { fill: none; stroke: #2d4b4f; stroke-width: 2.2; marker-end: url(#arrow); }
+      .line-soft { fill: none; stroke: #6b7a80; stroke-width: 1.8; stroke-dasharray: 7 6; marker-end: url(#arrowSoft); }
+      .line-bi { fill: none; stroke: #2d4b4f; stroke-width: 2.2; marker-start: url(#arrow); marker-end: url(#arrow); }
+      .legend { fill: #ffffff; stroke: #d9dfd7; stroke-width: 1.4; rx: 10; }
+    </style>
+  </defs>
+
+  <rect class="page" x="0" y="0" width="1440" height="980"/>
+  <text class="title" x="56" y="58">Robot Cloud System 系统结构</text>
+  <text class="subtitle" x="56" y="88">面向温室表型机器人任务调度、设备控制、采集资产管理与分析结果查询的一体化平台</text>
+
+  <rect class="group" x="44" y="128" width="260" height="660"/>
+  <text class="group-title" x="68" y="164">使用入口</text>
+
+  <rect class="node user" x="76" y="198" width="196" height="96"/>
+  <text class="box-title" x="104" y="232">浏览器 / 操作员</text>
+  <text class="box-note" x="104" y="258">登录、任务、设备、图库、结果、管理</text>
+
+  <rect class="node user" x="76" y="454" width="196" height="108"/>
+  <text class="box-title" x="104" y="488">验收脚本</text>
+  <text class="box-note" x="104" y="514">scripts/acceptance_smoke.py</text>
+  <text class="box-note" x="104" y="536">真实 API 闭环验证</text>
+
+  <rect class="group" x="348" y="128" width="294" height="660"/>
+  <text class="group-title" x="372" y="164">统一入口与前端</text>
+
+  <rect class="node edge" x="392" y="198" width="206" height="96"/>
+  <text class="box-title" x="428" y="232">Nginx</text>
+  <text class="box-note" x="428" y="258">/、/api、/ws 反向代理</text>
+
+  <rect class="node app" x="392" y="358" width="206" height="112"/>
+  <text class="box-title" x="428" y="392">Vue 3 控制台</text>
+  <text class="box-note" x="428" y="418">Vite + Pinia + Router</text>
+  <text class="box-note" x="428" y="440">仪表盘 / 任务 / 设备 / 图库</text>
+
+  <rect class="node app" x="392" y="562" width="206" height="108"/>
+  <text class="box-title" x="428" y="596">WebSocket 客户端</text>
+  <text class="box-note" x="428" y="622">/ws/events</text>
+  <text class="box-note" x="428" y="644">接收实时事件与告警</text>
+
+  <rect class="group" x="686" y="128" width="358" height="660"/>
+  <text class="group-title" x="710" y="164">后端应用层</text>
+
+  <rect class="node service" x="728" y="198" width="274" height="102"/>
+  <text class="box-title" x="764" y="232">Flask API</text>
+  <text class="box-note" x="764" y="258">Auth / Tasks / Robots / Assets</text>
+  <text class="box-note" x="764" y="280">Results / Dashboard / System / Admin</text>
+
+  <rect class="node service" x="728" y="336" width="274" height="122"/>
+  <text class="box-title" x="764" y="370">业务服务层</text>
+  <text class="box-note" x="764" y="396">任务状态机、机器人命令</text>
+  <text class="box-note" x="764" y="418">上传会话、分析调度、系统状态</text>
+
+  <rect class="node service" x="728" y="494" width="274" height="96"/>
+  <text class="box-title" x="764" y="528">实时事件总线</text>
+  <text class="box-note" x="764" y="554">RealtimeEvent + SystemAlert</text>
+
+  <rect class="node service" x="728" y="626" width="274" height="102"/>
+  <text class="box-title" x="764" y="660">Celery Worker</text>
+  <text class="box-note" x="764" y="686">分析任务执行</text>
+  <text class="box-note" x="764" y="708">机器人离线扫描定时任务</text>
+
+  <rect class="group" x="1088" y="128" width="300" height="660"/>
+  <text class="group-title" x="1112" y="164">基础设施与外部设备</text>
+
+  <rect class="node infra" x="1126" y="198" width="224" height="78"/>
+  <text class="box-title" x="1164" y="230">PostgreSQL</text>
+  <text class="box-note" x="1164" y="254">用户、任务、资产、事件</text>
+
+  <rect class="node infra" x="1126" y="306" width="224" height="78"/>
+  <text class="box-title" x="1164" y="338">Redis</text>
+  <text class="box-note" x="1164" y="362">Celery broker / backend</text>
+
+  <rect class="node infra" x="1126" y="414" width="224" height="78"/>
+  <text class="box-title" x="1164" y="446">MinIO</text>
+  <text class="box-note" x="1164" y="470">采集资产与分析结果文件</text>
+
+  <rect class="node infra" x="1126" y="522" width="224" height="78"/>
+  <text class="box-title" x="1164" y="554">Mosquitto MQTT</text>
+  <text class="box-note" x="1164" y="578">任务下发、心跳、进度、命令</text>
+
+  <rect class="node robot" x="1126" y="630" width="224" height="78"/>
+  <text class="box-title" x="1164" y="662">机器人 / Simulator</text>
+  <text class="box-note" x="1164" y="686">执行任务并上传数据</text>
+
+  <rect class="node external" x="1126" y="738" width="224" height="78"/>
+  <text class="box-title" x="1164" y="770">外部分析服务</text>
+  <text class="box-note" x="1164" y="794">可选 HTTP provider</text>
+
+  <path class="line" d="M272 246 C320 246 344 246 392 246"/>
+  <text class="label" x="304" y="232">HTTP</text>
+  <path class="line" d="M495 294 L495 358"/>
+  <text class="small" x="510" y="330">静态页面</text>
+  <path class="line" d="M598 246 C646 246 680 246 728 246"/>
+  <text class="label" x="638" y="232">/api</text>
+  <path class="line" d="M598 616 C646 616 680 542 728 542"/>
+  <text class="label" x="638" y="600">/ws</text>
+  <path class="line-soft" d="M272 508 C514 508 554 250 728 250"/>
+  <text class="small" x="322" y="488">验收调用 API</text>
+
+  <path class="line" d="M865 300 L865 336"/>
+  <path class="line" d="M865 458 L865 494"/>
+  <path class="line" d="M865 590 L865 626"/>
+
+  <path class="line-bi" d="M1002 248 C1052 248 1076 237 1126 237"/>
+  <text class="small" x="1032" y="222">SQLAlchemy</text>
+  <path class="line-bi" d="M1002 675 C1052 675 1076 345 1126 345"/>
+  <text class="small" x="1030" y="364">Celery</text>
+  <path class="line-bi" d="M1002 414 C1052 414 1076 453 1126 453"/>
+  <text class="small" x="1035" y="430">对象存储</text>
+  <path class="line-bi" d="M1002 384 C1064 384 1064 561 1126 561"/>
+  <text class="small" x="1034" y="536">MQTT</text>
+  <path class="line" d="M1002 680 C1060 680 1062 777 1126 777"/>
+  <text class="small" x="1028" y="732">HTTP 分析</text>
+
+  <path class="line-bi" d="M1238 600 L1238 630"/>
+  <text class="small" x="1252" y="621">greenhouse/*</text>
+  <path class="line-soft" d="M1126 670 C1064 670 1056 260 1002 260"/>
+  <text class="small" x="1028" y="640">上传会话 / 资产完成 API</text>
+
+  <rect class="legend" x="56" y="840" width="1328" height="86"/>
+  <text class="group-title" x="82" y="874">核心闭环</text>
+  <text class="small" x="82" y="904">1. 操作员在 Vue 控制台创建任务，Flask API 写入 Postgres 并通过 MQTT 下发。</text>
+  <text class="small" x="472" y="904">2. 机器人或模拟器回传 ACK、心跳、进度和命令事件，后端更新任务状态并写入实时事件。</text>
+  <text class="small" x="82" y="926">3. 数据通过上传会话进入 MinIO，Celery worker 执行 demo/http/disabled 分析并生成结果。</text>
+  <text class="small" x="472" y="926">4. 前端通过 WebSocket 读取事件流，展示任务、设备、结果和系统告警。</text>
+</svg>

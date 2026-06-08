@@ -1,0 +1,175 @@
+/* ============================================================
+   Layout - PhenoBot Cloud
+   参考 Apple / Linear 设计语言
+   ============================================================ */
+
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 24px 18px;
+  overflow: hidden auto;
+  background: linear-gradient(180deg, #171717 0%, #202123 100%);
+  border-right: 1px solid var(--border-inverse);
+}
+
+.app-main {
+  min-width: 0;
+  padding: 22px 28px 40px;
+}
+
+.app-main-inner {
+  width: min(100%, var(--max-content));
+  margin: 0 auto;
+  display: grid;
+  gap: var(--space-6);
+}
+
+.app-header {
+  position: sticky;
+  top: 20px;
+  z-index: 20;
+}
+
+.page-grid,
+.stack,
+.grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.page-grid {
+  gap: var(--space-7);
+}
+
+.stack {
+  gap: var(--space-5);
+}
+
+.grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.page-section {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.split-panel {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.96fr) minmax(300px, 0.84fr);
+  gap: var(--space-6);
+}
+
+.sticky-column {
+  position: sticky;
+  top: calc(var(--header-height) + 20px);
+  align-self: start;
+}
+
+/* 响应式断点 */
+/* sm: 640px - 大手机横屏 */
+/* md: 768px - 平板竖屏 */
+/* lg: 1024px - 平板横屏/小笔记本 */
+/* xl: 1280px - 笔记本 */
+/* 2xl: 1536px - 大屏 */
+
+@media (max-width: 1279px) {
+  .app-shell {
+    grid-template-columns: var(--sidebar-compact-width) minmax(0, 1fr);
+  }
+
+  .app-main {
+    padding-inline: 22px;
+  }
+
+  .app-sidebar.compact {
+    padding-inline: 12px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar,
+  .app-sidebar.compact {
+    position: relative;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--border-inverse);
+    padding: 16px;
+  }
+
+  .app-main {
+    padding: 16px 18px 32px;
+  }
+
+  .app-header {
+    position: relative;
+    top: 0;
+  }
+
+  .grid,
+  .split-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .sticky-column {
+    position: static;
+  }
+}
+
+@media (max-width: 767px) {
+  .app-main {
+    padding: 12px 12px 28px;
+  }
+
+  .page-grid {
+    gap: var(--space-6);
+  }
+}
+
+/* 容器查询支持 */
+@container (max-width: 600px) {
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 触摸目标尺寸 */
+@media (pointer: coarse) {
+  .btn,
+  .chip,
+  .input,
+  .select,
+  .textarea,
+  .nav-link,
+  .robot-list-item,
+  .option-item {
+    min-height: 48px;
+  }
+
+  .btn-sm {
+    min-height: 40px;
+  }
+}
+
+/* 安全区域适配 */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .app-main {
+    padding-bottom: max(40px, env(safe-area-inset-bottom));
+  }
+}
+
+/* 暗色主题适配 */
+[data-theme="dark"] .app-sidebar {
+  background: linear-gradient(180deg, #0a0a0b 0%, #141416 100%);
+}

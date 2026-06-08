@@ -1,0 +1,274 @@
+networks:
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
+  data-net:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: phenobot
+    ports:
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - data-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d phenobot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    command: redis-server --appendonly yes --appendfsync everysec
+    ports:
+      - "${REDIS_HOST_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - data-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    env_file:
+      - path: ./demo.env
+        required: true
+      - path: ${STACK_ENV_FILE:-/dev/null}
+        required: false
+    ports:
+      - "${MINIO_API_HOST_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_HOST_PORT:-9001}:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - data-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  minio-init:
+    image: minio/mc:latest
+    restart: "no"
+    env_file:
+      - path: ./demo.env
+        required: true
+      - path: ${STACK_ENV_FILE:-/dev/null}
+        required: false
+    depends_on:
+      minio:
+        condition: service_healthy
+    networks:
+      - data-net
+    entrypoint: >
+      /bin/sh -c "
+      for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+        if mc alias set local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD &&
+           mc mb --ignore-existing local/$${MINIO_BUCKET:-phenobot-assets}; then
+          exit 0;
+        fi;
+        echo \"MinIO initialization failed (attempt $$attempt/12); retrying...\" >&2;
+        sleep 2;
+      done;
+      echo \"MinIO initialization failed after 12 attempts\" >&2;
+      exit 1
+      "
+
+  mosquitto-init:
+    image: eclipse-mosquitto:2
+    restart: "no"
+    env_file:
+      - path: ./demo.env
+        required: true
+      - path: ${STACK_ENV_FILE:-/dev/null}
+        required: false
+    environment:
+      MQTT_USERNAME: ${MQTT_USERNAME:-demo-mqtt-user}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:-demo-mqtt-pass-32}
+    volumes:
+      - mosquitto-data:/mosquitto/config
+    networks:
+      - data-net
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        mosquitto_passwd -c -b /mosquitto/config/passwd $${MQTT_USERNAME} $${MQTT_PASSWORD}
+        chmod 0700 /mosquitto/config/passwd
+        chown 1883:1883 /mosquitto/config/passwd
+        echo "Password file created for user: $${MQTT_USERNAME}"
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    env_file:
+      - path: ./demo.env
+        required: true
+      - path: ${STACK_ENV_FILE:-/dev/null}
+        required: false
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto-data:/mosquitto/config
+    ports:
+      - "${MQTT_HOST_PORT:-1883}:1883"
+    networks:
+      - data-net
+      - backend-net
+    depends_on:
+      mosquitto-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_pub -h localhost -t 'test/healthcheck' -n -u $${MQTT_USERNAME} -P $${MQTT_PASSWORD} >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  backend:
+    build:
+      context: ..
+      dockerfile: deploy/backend.Dockerfile
+    restart: unless-stopped
+    command: /bin/sh -c "python -m flask --app backend.run db-upgrade && gunicorn --workers 2 --threads 4 --bind 0.0.0.0:5000 backend.run:app"
+    env_file:
+      - path: ./demo.env
+        required: true
+      - path: ${STACK_ENV_FILE:-/dev/null}
+        required: false
+    environment:
+      MQTT_CLIENT_ID: cloud-server-backend
+    networks:
+      - backend-net
+      - data-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+      mosquitto:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/api/system/health', timeout=5)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  worker:
+    build:
+      context: ..
+      dockerfile: deploy/backend.Dockerfile
+    restart: unless-stopped
+    command: celery -A worker.celery_app.celery_app worker --beat --loglevel=info
+    env_file:
+      - path: ./demo.env
+        required: true
+      - path: ${STACK_ENV_FILE:-/dev/null}
+        required: false
+    environment:
+      MQTT_CLIENT_ID: cloud-server-worker
+    networks:
+      - backend-net
+      - data-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+      mosquitto:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"from redis import Redis; Redis.from_url('redis://redis:6379/0').ping()\""]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  simulator:
+    build:
+      context: ..
+      dockerfile: deploy/simulator.Dockerfile
+    restart: unless-stopped
+    env_file:
+      - path: ./demo.env
+        required: true
+      - path: ${STACK_ENV_FILE:-/dev/null}
+        required: false
+    environment:
+      API_BASE_URL: http://backend:5000
+      MQTT_BROKER_HOST: mosquitto
+    networks:
+      - backend-net
+      - data-net
+    depends_on:
+      backend:
+        condition: service_healthy
+      mosquitto:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /tmp/simulator.ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: deploy/frontend.Dockerfile
+    restart: unless-stopped
+    networks:
+      - frontend-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1/ >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "${APP_HTTP_PORT:-80}:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - frontend-net
+      - backend-net
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1/ >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:
+  mosquitto-data:

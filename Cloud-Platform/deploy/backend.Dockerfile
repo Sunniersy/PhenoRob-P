@@ -1,0 +1,10 @@
+ARG BASE_IMAGE_PYTHON=robot-cloud-python-base:3.11-slim
+FROM ${BASE_IMAGE_PYTHON}
+
+WORKDIR /app
+COPY backend/requirements.txt /tmp/backend-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/backend-requirements.txt
+COPY . /app
+
+ENV PYTHONPATH=/app
+CMD ["python", "-m", "backend.run"]

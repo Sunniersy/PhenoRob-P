@@ -1,0 +1,467 @@
+/* ============================================================
+   Base Styles - PhenoBot Cloud
+   参考 Apple / Linear 设计语言
+   ============================================================ */
+
+@keyframes app-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes stagger-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  color-scheme: light;
+}
+
+/* 暗色主题 */
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  background: var(--bg-canvas);
+  letter-spacing: var(--tracking-normal);
+  line-height: var(--leading-normal);
+  transition: background var(--duration-base) var(--ease-default),
+              color var(--duration-base) var(--ease-default);
+}
+
+#app {
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(16, 163, 127, 0.18);
+}
+
+[data-theme="dark"] ::selection {
+  background: rgba(52, 211, 153, 0.25);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+select:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible) {
+  outline: none;
+}
+
+button {
+  padding: 0;
+  background: transparent;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+code,
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* 排版优化 - Apple风格 */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: var(--tracking-tight);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  box-shadow: var(--shadow-focus);
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* 路由过渡动画 */
+.route-fade-enter-active,
+.route-fade-leave-active {
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.route-fade-enter-from,
+.route-fade-leave-to {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+/* 列表stagger动画 */
+.list-stagger > * {
+  animation: stagger-fade-in var(--duration-base) var(--ease-out) both;
+}
+
+.list-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.list-stagger > *:nth-child(2) { animation-delay: 30ms; }
+.list-stagger > *:nth-child(3) { animation-delay: 60ms; }
+.list-stagger > *:nth-child(4) { animation-delay: 90ms; }
+.list-stagger > *:nth-child(5) { animation-delay: 120ms; }
+.list-stagger > *:nth-child(6) { animation-delay: 150ms; }
+.list-stagger > *:nth-child(7) { animation-delay: 180ms; }
+.list-stagger > *:nth-child(8) { animation-delay: 210ms; }
+.list-stagger > *:nth-child(9) { animation-delay: 240ms; }
+.list-stagger > *:nth-child(10) { animation-delay: 270ms; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* 滚动条样式 - 暗色主题优化 */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--gray-900);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--gray-700);
+  border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-600);
+}
+
+/* 无障碍 - 减少动画 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 安全区域适配 */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .app-main {
+    padding-bottom: max(40px, env(safe-area-inset-bottom));
+  }
+}
+
+/* ============================================================
+   动画工具类
+   ============================================================ */
+
+/* 淡入动画 */
+.fade-in {
+  animation: fade-in var(--duration-base) var(--ease-out) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 向上滑入 */
+.slide-up {
+  animation: slide-up var(--duration-base) var(--ease-out) both;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 向下滑入 */
+.slide-down {
+  animation: slide-down var(--duration-base) var(--ease-out) both;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 缩放弹出 */
+.scale-in {
+  animation: scale-in var(--duration-slow) var(--ease-spring) both;
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 旋转进入 */
+.spin-in {
+  animation: spin-in var(--duration-slow) var(--ease-spring) both;
+}
+
+@keyframes spin-in {
+  from {
+    opacity: 0;
+    transform: rotate(-10deg) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+/* 脉冲动画 */
+.pulse {
+  animation: pulse 2s var(--ease-default) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* 摇晃动画 (用于错误提示) */
+.shake {
+  animation: shake 0.5s var(--ease-spring);
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-4px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(4px);
+  }
+}
+
+/* 弹跳动画 */
+.bounce {
+  animation: bounce 0.5s var(--ease-bounce);
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* 闪烁动画 */
+.blink {
+  animation: blink 1s var(--ease-default) infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 滑动进入 (从左) */
+.slide-in-left {
+  animation: slide-in-left var(--duration-base) var(--ease-out) both;
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 滑动进入 (从右) */
+.slide-in-right {
+  animation: slide-in-right var(--duration-base) var(--ease-out) both;
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 展开动画 */
+.expand {
+  animation: expand var(--duration-base) var(--ease-out) both;
+}
+
+@keyframes expand {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+  }
+}
+
+/* 收缩动画 */
+.collapse {
+  animation: collapse var(--duration-base) var(--ease-in) both;
+}
+
+@keyframes collapse {
+  from {
+    opacity: 1;
+    max-height: 1000px;
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+  }
+}
+
+/* ============================================================
+   动画延迟工具类
+   ============================================================ */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* ============================================================
+   动画持续时间工具类
+   ============================================================ */
+.duration-fast { animation-duration: var(--duration-fast); }
+.duration-base { animation-duration: var(--duration-base); }
+.duration-slow { animation-duration: var(--duration-slow); }
+.duration-slower { animation-duration: var(--duration-slower); }
+
+/* ============================================================
+   过渡工具类
+   ============================================================ */
+.transition-all {
+  transition: all var(--duration-base) var(--ease-default);
+}
+
+.transition-colors {
+  transition:
+    color var(--duration-fast) var(--ease-default),
+    background-color var(--duration-fast) var(--ease-default),
+    border-color var(--duration-fast) var(--ease-default);
+}
+
+.transition-transform {
+  transition: transform var(--duration-base) var(--ease-spring);
+}
+
+.transition-opacity {
+  transition: opacity var(--duration-fast) var(--ease-default);
+}
+
+/* ============================================================
+   悬停效果工具类
+   ============================================================ */
+.hover-lift {
+  transition: transform var(--duration-base) var(--ease-spring);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.hover-scale {
+  transition: transform var(--duration-base) var(--ease-spring);
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.hover-glow {
+  transition: box-shadow var(--duration-base) var(--ease-default);
+}
+
+.hover-glow:hover {
+  box-shadow: var(--shadow-md);
+}
